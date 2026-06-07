@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>¿Quieres tener una cita conmigo? </title>
+    <title>¿Quieres tener una cita conmigo?</title>
     <style>
         /* Configuración del fondo y diseño responsivo */
         body {
@@ -65,44 +65,128 @@
             background-color: #ff69b4;
         }
 
+        /* Solución al amontonamiento: posición relativa al inicio */
         #btn-no {
             background-color: #8b8b8b;
             color: white;
-            position: absolute; /* Permite que se mueva por la pantalla */
+            position: relative; 
+        }
+
+        /* Estilo para el selector de días */
+        select {
+            padding: 10px;
+            font-size: 1.1rem;
+            border-radius: 10px;
+            border: 2px solid #ff1493;
+            margin-top: 15px;
+            outline: none;
+            background-color: white;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
     <div class="contenedor">
-        <h1 id="pregunta">¿Quieres tener una cita conmigo? </h1>
-        <div class="botones">
-            <button id="btn-si" onclick="aceptar()">Sí </button>
-            <button id="btn-no" onmouseover="moverBoton()" onclick="moverBoton()">No </button>
+        <h1 id="pregunta">¿Quieres tener una cita conmigo?</h1>
+        <div class="botones" id="contenedor-botones">
+            <button id="btn-si" onclick="presionoSi()">Sí</button>
+            <button id="btn-no" onmouseover="moverBoton()" onclick="moverBoton()">No</button>
         </div>
+        <div id="zona-extra"></div>
     </div>
 
     <script>
-        // Función para cuando presionan "Sí"
-        function aceptar() {
-            document.getElementById('pregunta').innerHTML = "Bien! El martes te parece bien?";
-            // Escondemos los botones
-            document.getElementById('btn-si').style.display = 'none';
-            document.getElementById('btn-no').style.display = 'none';
+        // Esta variable controla en qué nivel de pregunta estamos (1, 2 o 3)
+        let fase = 1;
+
+        function presionoSi() {
+            const pregunta = document.getElementById('pregunta');
+            const btnSi = document.getElementById('btn-si');
+            const btnNo = document.getElementById('btn-no');
+
+            if (fase === 1) {
+                // Pasamos a la pregunta del martes
+                pregunta.innerHTML = "¡Bien! ¿El martes te parece bien?";
+                
+                // IMPORTANTE: Ahora el "No" ya se puede clickear normalmente, no se va a mover
+                btnNo.removeAttribute('onmouseover'); 
+                btnNo.style.position = 'relative';
+                btnNo.style.left = '0px';
+                btnNo.style.top = '0px';
+
+                fase = 2; // Avanzamos de fase
+            } 
+            else if (fase === 2) {
+                // Si dice que SÍ al martes, pregunta por la plaza
+                pregunta.innerHTML = "¡Excelente! ¿Quieres ir a la plaza?";
+                
+                // Dejamos los botones normales para que responda a la plaza
+                btnSi.style.display = 'inline-block';
+                btnNo.style.display = 'inline-block';
+                
+                // Cambiamos lo que hacen los botones en la fase de la plaza
+                btnSi.setAttribute('onclick', 'fasePlaza("si")');
+                btnNo.setAttribute('onclick', 'fasePlaza("no")');
+            }
         }
 
-        // Función que mueve el botón "No" aleatoriamente
+        // Función exclusiva para cuando responde la pregunta de la plaza
+        function fasePlaza(respuesta) {
+            const pregunta = document.getElementById('pregunta');
+            ocultarBotones();
+            
+            if (respuesta === 'si') {
+                pregunta.innerHTML = "¡Perfecto! Nos vemos el martes en la plaza. ¡Va a ser genial! 📅✨";
+            } else {
+                pregunta.innerHTML = "¡Hecho! Busquemos otro lugar entonces, el martes nos vemos de todos modos. 😊";
+            }
+        }
+
+        // Función que salta si te dice que NO al martes
         function moverBoton() {
             const btnNo = document.getElementById('btn-no');
-            
-            // Calculamos posiciones aleatorias dentro de la pantalla visible
-            const x = Math.random() * (window.innerWidth - btnNo.offsetWidth - 20);
-            const y = Math.random() * (window.innerHeight - btnNo.offsetHeight - 20);
-            
-            // Sacamos el botón de su contenedor original y lo movemos por todo el cuerpo de la página
-            btnNo.style.position = 'fixed';
-            btnNo.style.left = x + 'px';
-            btnNo.style.top = y + 'px';
+
+            if (fase === 1) {
+                // En la primera pregunta, el botón huye como antes
+                btnNo.style.position = 'fixed';
+                const x = Math.random() * (window.innerWidth - btnNo.offsetWidth - 20);
+                const y = Math.random() * (window.innerHeight - btnNo.offsetHeight - 20);
+                btnNo.style.left = x + 'px';
+                btnNo.style.top = y + 'px';
+            } 
+            else if (fase === 2) {
+                // Si está en la pregunta del martes y presiona NO, muestra la lista de días
+                const pregunta = document.getElementById('pregunta');
+                pregunta.innerHTML = "Dime qué día de la semana puedes:";
+                ocultarBotones();
+
+                // Creamos la lista desplegable dinámicamente con JavaScript
+                const zonaExtra = document.getElementById('zona-extra');
+                zonaExtra.innerHTML = `
+                    <select id="select-dias" onchange="diaSeleccionado()">
+                        <option value="">-- Selecciona un día --</option>
+                        <option value="Lunes">Lunes</option>
+                        <option value="Miércoles">Miércoles</option>
+                        <option value="Jueves">Jueves</option>
+                        <option value="Viernes">Viernes</option>
+                    </select>
+                `;
+            }
+        }
+
+        // Función para cuando elige un día de la lista
+        function diaSeleccionado() {
+            const elDia = document.getElementById('select-dias').value;
+            if (elDia !== "") {
+                document.getElementById('pregunta').innerHTML = `¡Trato hecho! Nos vemos el ${elDia}. 🥰`;
+                document.getElementById('zona-extra').innerHTML = ""; // Limpia el menú desplegable
+            }
+        }
+
+        function ocultarBotones() {
+            document.getElementById('btn-si').style.display = 'none';
+            document.getElementById('btn-no').style.display = 'none';
         }
     </script>
 </body>
