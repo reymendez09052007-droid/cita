@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¿Quieres tener una cita conmigo? </title>
+    <style>
+        /* Configuración del fondo y diseño responsivo */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #ffb6c1; /* Fondo rosa claro */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .contenedor {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 90%;
+            width: 400px;
+            position: relative;
+        }
+
+        h1 {
+            color: #ff1493;
+            font-size: 2rem;
+            margin-bottom: 30px;
+        }
+
+        /* Estilo de los botones */
+        .botones {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 100px;
+            position: relative;
+        }
+
+        button {
+            padding: 12px 35px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+        }
+
+        #btn-si {
+            background-color: #ff1493;
+            color: white;
+        }
+
+        #btn-si:hover {
+            transform: scale(1.1);
+            background-color: #ff69b4;
+        }
+
+        #btn-no {
+            background-color: #8b8b8b;
+            color: white;
+            position: absolute; /* Permite que se mueva por la pantalla */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="contenedor">
+        <h1 id="pregunta">¿Quieres tener una cita conmigo? </h1>
+        <div class="botones">
+            <button id="btn-si" onclick="aceptar()">Sí </button>
+            <button id="btn-no" onmouseover="moverBoton()" onclick="moverBoton()">No </button>
+        </div>
+    </div>
+
+    <script>
+        // Función para cuando presionan "Sí"
+        function aceptar() {
+            document.getElementById('pregunta').innerHTML = "Bien! El martes te parece bien?";
+            // Escondemos los botones
+            document.getElementById('btn-si').style.display = 'none';
+            document.getElementById('btn-no').style.display = 'none';
+        }
+
+        // Función que mueve el botón "No" aleatoriamente
+        function moverBoton() {
+            const btnNo = document.getElementById('btn-no');
+            
+            // Calculamos posiciones aleatorias dentro de la pantalla visible
+            const x = Math.random() * (window.innerWidth - btnNo.offsetWidth - 20);
+            const y = Math.random() * (window.innerHeight - btnNo.offsetHeight - 20);
+            
+            // Sacamos el botón de su contenedor original y lo movemos por todo el cuerpo de la página
+            btnNo.style.position = 'fixed';
+            btnNo.style.left = x + 'px';
+            btnNo.style.top = y + 'px';
+        }
+    </script>
+</body>
+</html>
