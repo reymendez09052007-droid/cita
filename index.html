@@ -141,7 +141,7 @@
                 fasePreguntas = 2; 
             } 
             else if (fasePreguntas === 2) {
-                pregunta.innerHTML = "¡Excelente! ¿Quieres ir a la plaza?";
+                pregunta.innerHTML = "¿Quieres ir a la plaza?";
                 
                 btnSi.setAttribute('onclick', 'fasePlaza("si")');
                 btnNo.setAttribute('onclick', 'fasePlaza("no")');
@@ -149,7 +149,7 @@
         }
 
         function presionoNoMartes() {
-            document.getElementById('pregunta').innerHTML = "¡Va! Entonces dime por WhatsApp qué día te queda mejor dkasjkdajs";
+            document.getElementById('pregunta').innerHTML = "Okiiii, Entonces dime por WhatsApp qué día te queda mejor dkasjkdajs";
             ocultarBotones();
         }
 
@@ -158,9 +158,9 @@
             ocultarBotones();
             
             if (respuesta === 'si') {
-                pregunta.innerHTML = "¡Perfecto! Hay q seguir poniendonos de acuerdo en whatsapp dkasjkdajs";
+                pregunta.innerHTML = "Biemmm Hay q seguir poniendonos de acuerdo en whatsapp dkasjkdajs";
             } else {
-                pregunta.innerHTML = "¡Hecho! Busquemos otro lugar entonces, nos arreglamos por WhatsApp. 😊";
+                pregunta.innerHTML = "Okeiii Busquemos otro lugar entonces, vemos en wsp kdjas";
             }
         }
 
