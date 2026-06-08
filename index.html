@@ -33,6 +33,7 @@
             color: #ff1493;
             font-size: 2rem;
             margin-bottom: 30px;
+            line-height: 1.4;
         }
 
         /* Estilo de los botones */
@@ -65,65 +66,93 @@
             background-color: #ff69b4;
         }
 
-        /* Solución al amontonamiento: posición relativa al inicio */
+        /* Botón NO inicia oculto en la intro y en posición relativa */
         #btn-no {
             background-color: #8b8b8b;
             color: white;
             position: relative; 
+            display: none; /* Se oculta durante la introducción */
         }
     </style>
 </head>
 <body>
 
     <div class="contenedor">
-        <h1 id="pregunta">¿Quieres tener una cita conmigo?</h1>
+        <h1 id="pregunta">Holaaaaa Aryyyy como estas?</h1>
         <div class="botones" id="contenedor-botones">
-            <button id="btn-si" onclick="presionoSi()">Sí</button>
+            <button id="btn-si" onclick="avanzarIntro()">bien</button>
             <button id="btn-no" onmouseover="moverBoton()" onclick="moverBoton()">No</button>
         </div>
     </div>
 
     <script>
-        // Controla en qué pregunta estamos
-        let fase = 1;
+        // Controla el avance de toda la página
+        let faseIntro = 1;
+        let fasePreguntas = 1;
 
+        // Función para manejar la nueva introducción paso a paso
+        function avanzarIntro() {
+            const pregunta = document.getElementById('pregunta');
+            const btnSi = document.getElementById('btn-si');
+            const btnNo = document.getElementById('btn-no');
+
+            if (faseIntro === 1) {
+                pregunta.innerHTML = "Perdon por hoy no hablarte tanto pero es que estaba haciendo esto kfajksdjasjd";
+                btnSi.innerHTML = "okeii";
+                faseIntro = 2;
+            } 
+            else if (faseIntro === 2) {
+                pregunta.innerHTML = "Bien, eh estado haciendo esto pq tenia ganas de preguntarte algo okei? 😭";
+                btnSi.innerHTML = "buenom";
+                faseIntro = 3;
+            } 
+            else if (faseIntro === 3) {
+                pregunta.innerHTML = "bueno ahi vamos";
+                btnSi.innerHTML = "ok";
+                faseIntro = 4;
+            } 
+            else if (faseIntro === 4) {
+                // AQUÍ TERMINA LA INTRO Y EMPIEZA LO ANTERIOR
+                pregunta.innerHTML = "¿Quieres tener una cita conmigo?";
+                btnSi.innerHTML = "Sí";
+                
+                // Mostramos el botón "No" que estuvo oculto en la intro
+                btnNo.style.display = 'inline-block'; 
+                btnSi.setAttribute('onclick', 'presionoSi()');
+            }
+        }
+
+        // Lógica de las preguntas de la cita (lo que ya tenías)
         function presionoSi() {
             const pregunta = document.getElementById('pregunta');
             const btnSi = document.getElementById('btn-si');
             const btnNo = document.getElementById('btn-no');
 
-            if (fase === 1) {
-                // Pasamos a la pregunta del martes
+            if (fasePreguntas === 1) {
                 pregunta.innerHTML = "¡Bien! ¿El martes te parece bien?";
                 
-                // Desactivamos el escape del botón "No" para esta fase
+                // El "No" se vuelve un botón normal y plano para el Martes
                 btnNo.removeAttribute('onmouseover'); 
                 btnNo.style.position = 'relative';
                 btnNo.style.left = '0px';
                 btnNo.style.top = '0px';
 
-                // Ahora al darle clic a "No", llamará a otra respuesta directa
                 btnNo.setAttribute('onclick', 'presionoNoMartes()');
-
-                fase = 2; 
+                fasePreguntas = 2; 
             } 
-            else if (fase === 2) {
-                // Si dice que SÍ al martes, pregunta por la plaza
+            else if (fasePreguntas === 2) {
                 pregunta.innerHTML = "¡Excelente! ¿Quieres ir a la plaza?";
                 
-                // Cambiamos lo que hacen los botones en la fase de la plaza
                 btnSi.setAttribute('onclick', 'fasePlaza("si")');
                 btnNo.setAttribute('onclick', 'fasePlaza("no")');
             }
         }
 
-        // Si responde que NO al martes
         function presionoNoMartes() {
-            document.getElementById('pregunta').innerHTML = "Okiii ,Entonces dime por WhatsApp qué día te queda mejor dkasjkdajs";
+            document.getElementById('pregunta').innerHTML = "¡Va! Entonces dime por WhatsApp qué día te queda mejor dkasjkdajs";
             ocultarBotones();
         }
 
-        // Función para la última respuesta de la plaza
         function fasePlaza(respuesta) {
             const pregunta = document.getElementById('pregunta');
             ocultarBotones();
@@ -131,13 +160,13 @@
             if (respuesta === 'si') {
                 pregunta.innerHTML = "¡Perfecto! Hay q seguir poniendonos de acuerdo en whatsapp dkasjkdajs";
             } else {
-                pregunta.innerHTML = "¡Hecho! Busquemos otro lugar entonces, nos arreglamos por WhatsApp. ";
+                pregunta.innerHTML = "¡Hecho! Busquemos otro lugar entonces, nos arreglamos por WhatsApp. 😊";
             }
         }
 
-        // El botón huye solo en la primera fase
+        // El botón huye ÚNICAMENTE en la pregunta de la cita (Fase de preguntas 1)
         function moverBoton() {
-            if (fase === 1) {
+            if (fasePreguntas === 1) {
                 const btnNo = document.getElementById('btn-no');
                 btnNo.style.position = 'fixed';
                 const x = Math.random() * (window.innerWidth - btnNo.offsetWidth - 20);
